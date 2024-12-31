@@ -1,4 +1,4 @@
-import { Layout, Menu, Popconfirm } from "antd"
+import { Layout, Menu, message, Popconfirm } from "antd"
 import {
   HomeOutlined,
   DiffOutlined,
@@ -8,8 +8,9 @@ import {
 import "./index.scss"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useEffect } from "react"
-import { fetchUserInfo } from "@/store/modules/user"
+import { clearUserInfo, fetchUserInfo, setUserInfo } from "@/store/modules/user"
 import { useDispatch, useSelector } from "react-redux"
+import { removeToken, setToken } from "@/utils"
 
 const { Header, Sider } = Layout
 
@@ -44,7 +45,13 @@ const GeekLayout = () => {
     dispatch(fetchUserInfo())
   }, [dispatch])
   const userInfo = useSelector((state) => state.user.userInfo)
-  console.log("userInfo:", userInfo) // 使用标签
+  // 退出登录确认回调
+  const onConfirm = () => {
+    //提示并 跳转到登录页
+    message.success("退出成功")
+    dispatch(clearUserInfo())
+    navigate("/login")
+  }
   return (
     <Layout>
       <Header className="header">
@@ -52,8 +59,14 @@ const GeekLayout = () => {
         <div className="user-info">
           <span className="user-name">{userInfo.name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
-              <LogoutOutlined /> 退出
+            <Popconfirm
+              title="是否确认退出？"
+              okText="退出"
+              cancelText="取消"
+              onConfirm={onConfirm}
+            >
+              <LogoutOutlined />
+              退出
             </Popconfirm>
           </span>
         </div>
