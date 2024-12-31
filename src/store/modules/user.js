@@ -1,21 +1,22 @@
 // 和用户相关的状态管理
 import { request } from "@/utils"
 import { createSlice } from "@reduxjs/toolkit"
+import { setToken as _setToken, getToken } from "@/utils"
 
 const userStore = createSlice({
   name: "user",
   initialState: {
-    token: localStorage.getItem("token_key") || "",
+    token: getToken() || "",
   },
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload
       //   localStorage也存一份
-      localStorage.setItem("token_key", action.payload)
+      _setToken(action.payload)
     },
   },
 })
-//结构出actionCreator
+//解构出actionCreator
 const { setToken } = userStore.actions
 //获取reducer函数
 const userReducer = userStore.reducer
@@ -26,6 +27,6 @@ const fetchLogin = (loginForm) => {
     dispatch(setToken(res.data.token))
   }
 }
-export { setToken, fetchLogin }
+export { fetchLogin, setToken }
 //userReducer
 export default userReducer
