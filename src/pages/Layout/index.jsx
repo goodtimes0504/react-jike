@@ -8,9 +8,8 @@ import {
 import "./index.scss"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useEffect } from "react"
-import { clearUserInfo, fetchUserInfo, setUserInfo } from "@/store/modules/user"
+import { clearUserInfo, fetchUserInfo } from "@/store/modules/user"
 import { useDispatch, useSelector } from "react-redux"
-import { removeToken, setToken } from "@/utils"
 
 const { Header, Sider } = Layout
 
