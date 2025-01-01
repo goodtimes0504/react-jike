@@ -17,7 +17,7 @@ import "./index.scss" // 导入样式文件
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { useEffect, useRef, useState } from "react"
-import { getChannelsAPI } from "@/apis/article"
+import { createArticleAPI, getChannelsAPI } from "@/apis/article"
 
 // 从 Select 组件中解构出 Option 子组件
 const { Option } = Select
@@ -35,6 +35,21 @@ const Publish = () => {
     }
     getChannels()
   }, [])
+  // 提交表单
+  const onFinish = async (formValues) => {
+    // console.log(formValues)
+    // 按照接口要求 处理表单数据
+    const reqData = {
+      ...formValues,
+      cover: {
+        type: 0,
+        images: [],
+      },
+    }
+    // 调用接口 提交文章
+    const res = await createArticleAPI(reqData)
+    console.log(res)
+  }
   return (
     // 最外层容器，使用 publish 类名
     <div className="publish">
@@ -57,6 +72,7 @@ const Publish = () => {
           labelCol={{ span: 4 }} // 标签列宽度占4格
           wrapperCol={{ span: 16 }} // 内容列宽度占16格
           initialValues={{ type: 1 }} // 表单初始值
+          onFinish={onFinish}
         >
           {/* 文章标题输入框 */}
           <Form.Item

@@ -7,3 +7,11 @@ export function getChannelsAPI() {
     method: "get",
   })
 }
+// 提交文章表单
+export function createArticleAPI(data) {
+  return request({
+    url: "/mp/articles?draft=false",
+    method: "post",
+    data,
+  })
+}
