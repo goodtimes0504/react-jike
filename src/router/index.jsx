@@ -1,12 +1,16 @@
 //路由配置
 import Layout from "@/pages/Layout"
 import Login from "@/pages/Login"
-import Home from "@/pages/Home"
-import Article from "@/pages/Article"
-import Publish from "@/pages/Publish"
+// import Home from "@/pages/Home"
+// import Article from "@/pages/Article"
+// import Publish from "@/pages/Publish"
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import AuthRoute from "@/components/AuthRoute"
-
+import { lazy, Suspense } from "react"
+// 把Home 和 Article和 Publish 设置为懒加载
+const Home = lazy(() => import("@/pages/Home"))
+const Article = lazy(() => import("@/pages/Article"))
+const Publish = lazy(() => import("@/pages/Publish"))
 const router = createBrowserRouter(
   [
     {
@@ -23,15 +27,27 @@ const router = createBrowserRouter(
         },
         {
           path: "home",
-          element: <Home />,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Home />
+            </Suspense>
+          ),
         },
         {
           path: "article",
-          element: <Article />,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Article />
+            </Suspense>
+          ),
         },
         {
           path: "publish",
-          element: <Publish />,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Publish />
+            </Suspense>
+          ),
         },
       ],
     },
