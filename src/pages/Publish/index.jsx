@@ -17,8 +17,9 @@ import "./index.scss" // 导入样式文件
 // 导入富文本编辑器
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
-import { useEffect, useRef, useState } from "react"
-import { createArticleAPI, getChannelsAPI } from "@/apis/article"
+import { useRef, useState } from "react"
+import { createArticleAPI } from "@/apis/article"
+import { useChannel } from "@/hooks/useChannel"
 
 // 从 Select 组件中解构出 Option 子组件
 const { Option } = Select
@@ -26,16 +27,7 @@ const { Option } = Select
 // 定义发布文章组件
 const Publish = () => {
   const quillRef = useRef(null)
-  // 获取频道列表
-  const [channelList, setChannelList] = useState([])
-  // 获取频道列表
-  useEffect(() => {
-    const getChannels = async () => {
-      const res = await getChannelsAPI()
-      setChannelList(res.data.channels)
-    }
-    getChannels()
-  }, [])
+  const { channelList } = useChannel()
   // 提交表单
   const onFinish = async (formValues) => {
     // console.log(formValues)
