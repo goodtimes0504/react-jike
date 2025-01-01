@@ -8,7 +8,8 @@ import {
   Input, // 输入框组件
   Upload, // 上传组件
   Space, // 间距组件
-  Select, // 下拉选择组件
+  Select,
+  message, // 下拉选择组件
 } from "antd"
 import { PlusOutlined } from "@ant-design/icons" // 加号图标
 import { Link } from "react-router-dom" // 路由链接组件
@@ -39,11 +40,17 @@ const Publish = () => {
   const onFinish = async (formValues) => {
     // console.log(formValues)
     // 按照接口要求 处理表单数据
+    if (imageList.length !== imageType) {
+      message.warning(
+        "封面数量和封面类型不匹配，当前封面类型为" + imageType + "张"
+      )
+      return
+    }
     const reqData = {
       ...formValues,
       cover: {
-        type: 0,
-        images: [],
+        type: imageType, //当前封面模式
+        images: imageList.map((item) => item.response.data.url), //图片列表 上传前确保和后端要求的格式一致
       },
     }
     // 调用接口 提交文章
