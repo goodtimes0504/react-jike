@@ -37,3 +37,11 @@ export const getArticleByIdAPI = (id) => {
     method: "get",
   })
 }
+// 编辑文章
+export const updateArticleAPI = (id, data) => {
+  return request({
+    url: `/mp/articles/${id}?draft=false`,
+    method: "put",
+    data,
+  })
+}
