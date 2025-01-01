@@ -16,12 +16,25 @@ import "./index.scss" // 导入样式文件
 // 导入富文本编辑器
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
+import { useEffect, useRef, useState } from "react"
+import { getChannelsAPI } from "@/apis/article"
 
 // 从 Select 组件中解构出 Option 子组件
 const { Option } = Select
 
 // 定义发布文章组件
 const Publish = () => {
+  const quillRef = useRef(null)
+  // 获取频道列表
+  const [channelList, setChannelList] = useState([])
+  // 获取频道列表
+  useEffect(() => {
+    const getChannels = async () => {
+      const res = await getChannelsAPI()
+      setChannelList(res.data.channels)
+    }
+    getChannels()
+  }, [])
   return (
     // 最外层容器，使用 publish 类名
     <div className="publish">
@@ -73,8 +86,14 @@ const Publish = () => {
               placeholder="请选择文章频道" // 占位提示文字
               style={{ width: 400 }} // 设置宽度
             >
-              {/* 下拉选项 */}
-              <Option value={0}>推荐</Option>
+              {/* 下拉选项 value属性在 用户选中之后会自动收集起来 作为接口的提交字段*/}
+              {channelList.map((item) => {
+                return (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                )
+              })}
             </Select>
           </Form.Item>
 
@@ -87,11 +106,11 @@ const Publish = () => {
               { required: true, message: "请输入文章内容" }, // 必填项
             ]}
           >
-            {/* 富文本编辑器将在这里实现 */}
             <ReactQuill
               className="publish-quill"
               theme="snow"
               placeholder="请输入文章内容"
+              ref={quillRef}
             />
           </Form.Item>
 
