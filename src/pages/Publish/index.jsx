@@ -12,13 +12,13 @@ import {
   message, // 下拉选择组件
 } from "antd"
 import { PlusOutlined } from "@ant-design/icons" // 加号图标
-import { Link, useNavigate } from "react-router-dom" // 路由链接组件
+import { Link, useNavigate, useSearchParams } from "react-router-dom" // 路由链接组件
 import "./index.scss" // 导入样式文件
 // 导入富文本编辑器
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
-import { useRef, useState } from "react"
-import { createArticleAPI } from "@/apis/article"
+import { useEffect, useRef, useState } from "react"
+import { createArticleAPI, getArticleByIdAPI } from "@/apis/article"
 import { useChannel } from "@/hooks/useChannel"
 
 // 从 Select 组件中解构出 Option 子组件
@@ -66,6 +66,18 @@ const Publish = () => {
   const onTypeChange = (e) => {
     setImageType(e.target.value)
   }
+  //如果路径跟着id 回填数据
+  const [searchParams] = useSearchParams()
+  const ArticleId = searchParams.get("id")
+  // 获取form实例 这是 antd 的 Form 组件提供的一个 Hook API：Form.useForm()
+  const [form] = Form.useForm()
+  useEffect(() => {
+    const getArticleById = async () => {
+      const res = await getArticleByIdAPI(ArticleId)
+      form.setFieldsValue(res.data)
+    }
+    getArticleById()
+  }, [ArticleId, form])
   return (
     // 最外层容器，使用 publish 类名
     <div className="publish">
@@ -89,6 +101,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }} // 内容列宽度占16格
           initialValues={{ type: 0 }} // 表单初始值
           onFinish={onFinish}
+          form={form}
         >
           {/* 文章标题输入框 */}
           <Form.Item

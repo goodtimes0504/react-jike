@@ -30,3 +30,10 @@ export const deleteArticleAPI = (id) => {
     method: "delete",
   })
 }
+// 获取文章详情
+export const getArticleByIdAPI = (id) => {
+  return request({
+    url: `/mp/articles/${id}`,
+    method: "get",
+  })
+}
