@@ -57,6 +57,11 @@ const Publish = () => {
       setImageList(value.fileList)
     }
   }
+  // 切换封面类型
+  const [imageType, setImageType] = useState(0)
+  const onTypeChange = (e) => {
+    setImageType(e.target.value)
+  }
   return (
     // 最外层容器，使用 publish 类名
     <div className="publish">
@@ -78,7 +83,7 @@ const Publish = () => {
         <Form
           labelCol={{ span: 4 }} // 标签列宽度占4格
           wrapperCol={{ span: 16 }} // 内容列宽度占16格
-          initialValues={{ type: 1 }} // 表单初始值
+          initialValues={{ type: 0 }} // 表单初始值
           onFinish={onFinish}
         >
           {/* 文章标题输入框 */}
@@ -121,7 +126,7 @@ const Publish = () => {
           </Form.Item>
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
@@ -133,17 +138,19 @@ const Publish = () => {
             onChange 上传图片的回调函数
             点击图片上传到服务器 触发onChange 拿到上传后的图片展示地址 
             */}
-            <Upload
-              listType="picture-card"
-              showUploadList
-              action={"http://geek.itheima.net/v1_0/upload"}
-              name="image"
-              onChange={onChange}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+            {imageType > 0 && (
+              <Upload
+                listType="picture-card"
+                showUploadList
+                action={"http://geek.itheima.net/v1_0/upload"}
+                name="image"
+                onChange={onChange}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
 
           {/* 文章内容编辑器 */}
