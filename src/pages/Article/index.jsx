@@ -129,6 +129,10 @@ const Article = () => {
       end_pubdate: values?.date?.[1]?.format("YYYY-MM-DD") || "",
     })
   }
+  // 分页
+  const onPageChange = (page, pageSize) => {
+    setReqData({ ...reqData, page, per_page: pageSize })
+  }
   return (
     <div>
       <Card
@@ -177,7 +181,16 @@ const Article = () => {
       </Card>
       {/* 准备表格区域 */}
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={articleList} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={articleList}
+          pagination={{
+            total: count,
+            pageSize: reqData.per_page,
+            onChange: onPageChange,
+          }}
+        />
       </Card>
     </div>
   )
