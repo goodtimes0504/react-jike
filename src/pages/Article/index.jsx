@@ -1,5 +1,15 @@
 import { Link } from "react-router-dom"
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from "antd"
+import {
+  Card,
+  Breadcrumb,
+  Form,
+  Button,
+  Radio,
+  DatePicker,
+  Select,
+  Popconfirm,
+  message,
+} from "antd"
 // 引入汉化包 让时间选择器显示中文
 import locale from "antd/es/date-picker/locale/zh_CN"
 // 导入资源
@@ -8,7 +18,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
 import img404 from "@/assets/error.png"
 import { useChannel } from "@/hooks/useChannel"
 import { useEffect, useState } from "react"
-import { getArticleListAPI } from "@/apis/article"
+import { deleteArticleAPI, getArticleListAPI } from "@/apis/article"
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -72,12 +82,23 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            <Popconfirm
+              title="确定要删除吗？"
+              description="删除后将无法恢复"
+              onConfirm={() => onConfirm(data)}
+              onCancel={() => {
+                console.log("取消")
+              }}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         )
       },
@@ -132,6 +153,16 @@ const Article = () => {
   // 分页
   const onPageChange = (page, pageSize) => {
     setReqData({ ...reqData, page, per_page: pageSize })
+  }
+  // 删除
+  const onConfirm = async (data) => {
+    console.log(data) //打印出来的是这一行的完整信息 包括id 封面 点赞数 评论数 发布时间 阅读数 状态 标题
+    const res = await deleteArticleAPI(data.id)
+    if (res.message === "OK") {
+      message.success("删除成功")
+    }
+    // 删除后 重新获取文章列表
+    setReqData({ ...reqData, page: 1 })
   }
   return (
     <div>
