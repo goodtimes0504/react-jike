@@ -35,7 +35,20 @@ const Article = () => {
     {
       title: "状态",
       dataIndex: "status",
-      render: (data) => <Tag color="green">审核通过</Tag>,
+      // render是antd的Table组件提供的 用于自定义列的渲染
+      // data是后端返回的数据里的每一行的status 可以根据它做条件渲染
+      // 0:草稿 1:待审核 2:审核通过 3:审核失败 4:已删除 不传默认为全部
+      // 用枚举的方式 让状态更清晰
+      render: (data) => {
+        const statusMap = {
+          0: { color: "blue", text: "草稿" },
+          1: { color: "orange", text: "待审核" },
+          2: { color: "green", text: "审核通过" },
+          3: { color: "red", text: "审核失败" },
+          4: { color: "gray", text: "已删除" },
+        }
+        return <Tag color={statusMap[data].color}>{statusMap[data].text}</Tag>
+      },
     },
     {
       title: "发布时间",

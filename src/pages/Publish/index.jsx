@@ -12,7 +12,7 @@ import {
   message, // 下拉选择组件
 } from "antd"
 import { PlusOutlined } from "@ant-design/icons" // 加号图标
-import { Link } from "react-router-dom" // 路由链接组件
+import { Link, useNavigate } from "react-router-dom" // 路由链接组件
 import "./index.scss" // 导入样式文件
 // 导入富文本编辑器
 import ReactQuill from "react-quill"
@@ -28,6 +28,7 @@ const { Option } = Select
 const Publish = () => {
   const quillRef = useRef(null)
   const { channelList } = useChannel()
+  const navigate = useNavigate()
   // 提交表单
   const onFinish = async (formValues) => {
     // console.log(formValues)
@@ -47,7 +48,11 @@ const Publish = () => {
     }
     // 调用接口 提交文章
     const res = await createArticleAPI(reqData)
-    console.log(res)
+    if (res.message === "OK") {
+      message.success("文章发布成功")
+      // 跳转到文章列表页
+      navigate("/article", { replace: true })
+    }
   }
   // 上传图片
   const [imageList, setImageList] = useState([])
