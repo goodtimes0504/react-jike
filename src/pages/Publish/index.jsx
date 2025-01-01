@@ -91,7 +91,10 @@ const Publish = () => {
         })
       )
     }
-    getArticleById()
+    // 如果ArticleId 存在 则获取文章详情
+    if (ArticleId) {
+      getArticleById()
+    }
   }, [ArticleId, form])
   return (
     // 最外层容器，使用 publish 类名
@@ -105,7 +108,7 @@ const Publish = () => {
               // 首页链接
               { title: <Link to={"/"}>首页</Link> },
               // 当前页面标题
-              { title: "发布文章" },
+              { title: ArticleId ? "修改文章" : "发布文章" },
             ]}
           />
         }
