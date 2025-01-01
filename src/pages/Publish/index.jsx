@@ -50,6 +50,13 @@ const Publish = () => {
     const res = await createArticleAPI(reqData)
     console.log(res)
   }
+  // 上传图片
+  const [imageList, setImageList] = useState([])
+  const onChange = (value) => {
+    if (value.file.status === "done") {
+      setImageList(value.fileList)
+    }
+  }
   return (
     // 最外层容器，使用 publish 类名
     <div className="publish">
@@ -111,6 +118,32 @@ const Publish = () => {
                 )
               })}
             </Select>
+          </Form.Item>
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+                <Radio value={3}>三图</Radio>
+                <Radio value={0}>无图</Radio>
+              </Radio.Group>
+            </Form.Item>
+            {/* listType 决定选择文件框的外观样式  showUploadList 是否显示上传列表
+            action 上传的地址
+            name 上传的参数名
+            onChange 上传图片的回调函数
+            点击图片上传到服务器 触发onChange 拿到上传后的图片展示地址 
+            */}
+            <Upload
+              listType="picture-card"
+              showUploadList
+              action={"http://geek.itheima.net/v1_0/upload"}
+              name="image"
+              onChange={onChange}
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+            </Upload>
           </Form.Item>
 
           {/* 文章内容编辑器 */}
