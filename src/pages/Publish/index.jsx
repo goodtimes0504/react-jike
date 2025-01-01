@@ -58,6 +58,7 @@ const Publish = () => {
   const [imageList, setImageList] = useState([])
   const onChange = (value) => {
     if (value.file.status === "done") {
+      // 上传成功后 更新图片列表
       setImageList(value.fileList)
     }
   }
@@ -74,7 +75,21 @@ const Publish = () => {
   useEffect(() => {
     const getArticleById = async () => {
       const res = await getArticleByIdAPI(ArticleId)
-      form.setFieldsValue(res.data)
+      // 为什么form.setFieldsValue(res.data) 可以回填部分数据
+      // 因为form.setFieldsValue 是 antd 的 Form 组件提供的一个 Hook API：Form.useForm()
+      // 它可以根据接口返回的数据 回填部分数据
+      // 但是 回填数据 需要和表单的name 属性一致
+      //比如 set方法需要{type:3}这种数据 但是返回的接口里的数据里是cover.type所以需要处理才能正确回填
+      setImageType(res.data.cover.type)
+      form.setFieldsValue({ ...res.data, type: res.data.cover.type })
+      // 回填图片
+      setImageList(
+        res.data.cover.images.map((url) => {
+          return {
+            url,
+          }
+        })
+      )
     }
     getArticleById()
   }, [ArticleId, form])
@@ -163,6 +178,7 @@ const Publish = () => {
                 name="image"
                 onChange={onChange}
                 maxCount={imageType}
+                fileList={imageList}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
